@@ -1,0 +1,29 @@
+# ===== Visual Studio =====
+.vs/
+x64/
+x86/
+Debug/
+Release/
+
+# ===== Build outputs =====
+*.obj
+*.ilk
+*.pdb
+*.exe
+
+# ===== Visual Studio user files =====
+*.user
+*.suo
+
+# ===== Logs / temp =====
+*.log
+
+# ===== Documents / Office =====
+*.pptx
+*.xlsx
+*.xls
+*.docx
+*.txt
+
+# ===== Misc =====
+*$*
