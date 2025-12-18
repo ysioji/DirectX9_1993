@@ -222,12 +222,10 @@ BOOL MyApp::LoadResource()
 			 ,_T("img/tile/speed_32.png")
 			 ,_T("img/tile/distance_32.png")
 			 ,_T("img/tile/spanner_32.png")
-			 ,_T("img/post.png")
-
-			,_T("img/TEST.png")
-			,_T("img/logo.png")
-			,_T("img/image.png")
-
+			/* ,_T("img/post.png")*/
+			,_T("img/TEST.png")		// タイトル画像
+			,_T("img/logo_1993.png")		// ロゴ画像
+			/*,_T("img/image.png")*/
 		};
 		//static_assert(_countof(pszTexName)==TEX_COUNT,"" ):
 		for (int i = 0; i < TEX_COUNT; i++) {
@@ -322,7 +320,6 @@ void MyApp::UpdateTitle()
 	//	ChangeScene(GAME_SCENE_STORY);
 	//	printf("キー入力 o");
 	//}
-
 }
 //タイトル画面を描画
 void MyApp::DrawTitle()
@@ -345,6 +342,7 @@ void MyApp::DrawTitle()
 	IDirect3DDevice9* m_pDev = GetAppInst()->GetDxDev();
 	ID3DXSprite* pSpr = GetAppInst()->GetDxSpr();
 	IDirect3DTexture9* pTex = GetAppInst()->GetDxTex(TEX_TITLE);
+	IDirect3DTexture9* pLogo = GetAppInst()->GetDxTex(TEX_LOGO);
 
 	//D3DXMATRIX identity;
 	//D3DXMatrixIdentity(&identity);
@@ -355,7 +353,7 @@ void MyApp::DrawTitle()
 
 	float texW = (float)desc.Width;   // 512
 	float texH = (float)desc.Height;  // 512
-
+		
 	// 画面いっぱいにするスケールを計算
 	float scaleX = 1280.0f / texW;
 	float scaleY = 1024.0f / texH;
@@ -430,13 +428,14 @@ void MyApp::UpdateSelect()
 		ChangeScene(GAME_SCENE_STORY);
 		printf("Enter");
 	}
+
 }
 void MyApp::DrawSelect()
 {	
 	//Select messsage
 	//背景
 	// 背景色を決める。RGB=(0,0,255)とする.-
-	D3DCOLOR rgb = D3DCOLOR_XRGB(0, 128, 128);
+	D3DCOLOR rgb = D3DCOLOR_XRGB(0, 0, 0);
 	// 画面全体を消去.
 	m_pDev->Clear(0, NULL, D3DCLEAR_TARGET, rgb, 1.0f, 0);
 	// 描画を開始（シーン描画の開始）.
@@ -445,6 +444,10 @@ void MyApp::DrawSelect()
 	D3DXMATRIX identity;
 	D3DXMatrixIdentity(&identity);
 	m_pSpr->SetTransform(&identity);
+	IDirect3DDevice9* m_pDev = GetAppInst()->GetDxDev();
+	ID3DXSprite* pSpr = GetAppInst()->GetDxSpr();
+	// 動画を取得してループ再生・カーソルが動いたら初期化
+
 	//シーンの描画を終了.
 	m_pSpr->End();
 	m_pDev->EndScene();
