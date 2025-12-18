@@ -29,34 +29,34 @@ class TankBase {
 protected:
 	E_TEXTURE   m_texName;// 表示するテクスチャ.
 	TankStatus  m_tstatus;//搭載物の情報
-	
+
 	TankBase()
 		:m_texName(TEX_INVALID) {
-		 m_tstatus.pos = { 0.0f, 0.0f };
-		 m_tstatus.vel = { 0.0f, 0.0f };
-		 m_tstatus.moveSpeed = 0;
-		 m_tstatus.hp = 0;
-		 m_tstatus.angle = 0;
-		 m_tstatus.alpha = 255;
-		 m_tstatus.isDead = false;
-	
+		m_tstatus.pos = { 0.0f, 0.0f };
+		m_tstatus.vel = { 0.0f, 0.0f };
+		m_tstatus.moveSpeed = 0;
+		m_tstatus.hp = 0;
+		m_tstatus.angle = 0;
+		m_tstatus.alpha = 255;
+		m_tstatus.isDead = false;
+
 		// _tprintf(_T("call PlayerBase constractor\n"));
 	}
 public:
 	virtual ~TankBase() = default;
-	virtual void Init(float tx, float ty, float tvx, float tvy, int tspeed, int thp,bool isDead);//初期化
-	virtual void Move() =0;
-	virtual void Fire() =0;
+	virtual void Init(float tx, float ty, float tvx, float tvy, int tspeed, int thp, bool isDead);//初期化
+	virtual void Move() = 0;
+	virtual void Fire() = 0;
 	void Updata();//毎フレーム呼び出し
 	virtual void Draw(E_TEXTURE texName);//描画タンク/パイロット本体
 
-	Vector2 GetPos() { return m_tstatus.pos;}
-	float  GetAngle() {return m_tstatus.angle;}
+	Vector2 GetPos() { return m_tstatus.pos; }
+	float  GetAngle() { return m_tstatus.angle; }
 
 	void IsLive();
-	
 
-	
+
+
 	bool IsDead() const { return  m_tstatus.isDead; }
 	void Kill() { m_tstatus.isDead = true; }
 	//int GetHp
@@ -67,5 +67,8 @@ public:
 			m_tstatus.isDead = true;
 	}
 	//3期
+	//アイテム取得するための関数
 
+	void AddMoveSpeed(float speed);
+		
 };

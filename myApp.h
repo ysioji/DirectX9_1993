@@ -125,6 +125,7 @@ private:
 	PlayerCCC m_pCCC; 
 	PlayerDDD m_pDDD; 
 	
+	void CheckPlayerItemHit();
 	
 #if defined(_DEBUG)
 	// デバッグ情報の表示.

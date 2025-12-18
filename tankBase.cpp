@@ -79,3 +79,10 @@ void TankBase::IsLive() {
 		}
 	
 }
+
+void TankBase::AddMoveSpeed(float speed) {
+
+    m_tstatus.moveSpeed += speed;
+
+
+}

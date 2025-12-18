@@ -84,6 +84,6 @@ public:
 	void DrawItems();
 	E_BOX_ITEM RandomDrop();
 	void DropItem(int row, int col);
-	
+	E_BOX_ITEM& GetBoxItem(int row, int col){return m_boxItem[row][col];}
 
 };

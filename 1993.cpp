@@ -705,6 +705,7 @@ BOOL MyApp::UpdateMain()
 	m_field.DebugPrintAll();
 	//ドロップ処理
 	m_field.DropUpdate();
+	CheckPlayerItemHit();
 	return TRUE;
 }
 
@@ -861,6 +862,53 @@ HRESULT MyApp::InitFont()
 	if (FAILED(hr)) return E_FAIL;
 	return S_OK;
 }
+
+//playerとitemの当たり判定
+
+void MyApp::CheckPlayerItemHit()
+{
+	const int ox = (WIDTH - COLS * FIELD_SIZE) / 2;
+	const int oy = (HEIGHT - ROWS * FIELD_SIZE) / 2;
+
+	for (auto* tank : m_players)
+	{
+		if (tank->IsDead())
+			continue;
+
+		Vector2 pos = tank->GetPos();
+
+		int mx = int((pos.x - ox) / FIELD_SIZE);
+		int my = int((pos.y - oy) / FIELD_SIZE);
+
+		if (mx < 0 || mx >= COLS || my < 0 || my >= ROWS)
+			continue;
+
+		E_BOX_ITEM& item = m_field.GetBoxItem(my, mx);
+		if (item == BOX_ITEM_NONE)
+			continue;
+
+		// ★ アイテム効果
+		switch (item)
+		{
+		case BOX_ITEM_MOVE:
+			tank->AddMoveSpeed(0.3f*50);
+			break;
+
+		case BOX_ITEM_DISTANCE:
+			//tank->AddShotRange(20);
+			break;
+
+		case BOX_ITEM_HP:
+			//tank->AddHp(3);
+			break;
+		}
+
+		// ★ delete アイテム
+		item = BOX_ITEM_NONE;
+	}
+}
+
+
 
 
 
