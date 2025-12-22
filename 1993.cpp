@@ -286,6 +286,10 @@ void MyApp::Release()
 
 // Title
 void MyApp::TitleInit() {
+	m_logoY = -200.0f;
+	m_logoSpeed = 120.0f;   // px/sec
+	m_logotime = 1.0f / 60.0f;
+
 	m_gameScene = GAME_SCENE_BEGIN;
 }
 
@@ -298,7 +302,14 @@ void MyApp::UpdateTitle()
 		ChangeScene(GAME_SCENE_SELECT);
 		printf("Enter");
 	}
+	float targetY = 200.0f; // 最終位置
 
+	if (m_logoY < targetY)
+	{
+		m_logoY += m_logoSpeed * m_logotime;
+		if (m_logoY > targetY)
+			m_logoY = targetY;
+	}
 	//MyInput* pInput = GetInputInst();
 	//// 何かキーが押されたらゲームシーンへ
 	//bool isAnyKeyPressed = false;
@@ -343,7 +354,6 @@ void MyApp::DrawTitle()
 	ID3DXSprite* pSpr = GetAppInst()->GetDxSpr();
 	IDirect3DTexture9* pTex = GetAppInst()->GetDxTex(TEX_TITLE);
 	IDirect3DTexture9* pLogo = GetAppInst()->GetDxTex(TEX_LOGO);
-
 	//D3DXMATRIX identity;
 	//D3DXMatrixIdentity(&identity);
 	//pSpr->SetTransform(&identity);
@@ -364,11 +374,36 @@ void MyApp::DrawTitle()
 
 	// 背景画像の描画
 	m_pSpr->Draw(pTex, nullptr, nullptr, nullptr, 0xFFFFFFFF);//888899
+
 	//m_pSpr->Draw(m_pTex, &rc, NULL, NULL, 0xFFFFFFFF);
 	//pSpr->Draw(pTex, nullptr, nullptr, &pos, D3DCOLOR_ARGB(255, 255, 255, 255));
 	m_pSpr->End();
+	// ロゴ
+	m_pSpr->Begin(D3DXSPRITE_ALPHABLEND);
 
-	////text処理
+
+	// 行列
+	D3DXMATRIX matScale, matTrans, matWorld;
+	// 縮小率
+	float scale = 1.5f;
+	D3DXMatrixScaling(&matScale, scale, scale, 1.0f);
+
+	// ロゴ幅（縮小後）
+	float logoW = 512.0f * scale;
+
+	// 中央寄せ
+	float x = (WIDTH - logoW) / 2;
+	float y = m_logoY;
+
+	D3DXMatrixTranslation(&matTrans, x, y, 0.0f);
+	// 合成
+	matWorld = matScale * matTrans;
+	m_pSpr->SetTransform(&matWorld);
+
+	m_pSpr->Draw(pLogo, nullptr, nullptr, nullptr, 0xFFFFFFFF);
+	m_pSpr->End();
+
+	//text処理
 	static int frameBlink = 0;
 
 	// 点滅の間隔
@@ -438,14 +473,34 @@ void MyApp::DrawSelect()
 	D3DCOLOR rgb = D3DCOLOR_XRGB(0, 0, 0);
 	// 画面全体を消去.
 	m_pDev->Clear(0, NULL, D3DCLEAR_TARGET, rgb, 1.0f, 0);
+	ID3DXSprite* pSpr = GetAppInst()->GetDxSpr();
+	pSpr->Begin(D3DXSPRITE_ALPHABLEND);
+	ID3DXFont* font = GetAppInst()->GetFont();
+	IDirect3DTexture9* pTex = nullptr;
+	//   IDirect3DTexture9* pTex = GetAppInst()->GetTex(TEX_LG1);
+	//   ID3DXFont* font = GetAppInst()->GetFont();
+	//if (state == STATE_SELECT_MODE)
+	//{
+	//	pTex = GetAppInst()->GetTex(TEX_LG0);
+	//}
+	//else if (state == STATE_INPUT_INFO) {
+	//	// Enter確定後にモード別背景を表示
+	//	if (mode == MODE_LOGIN) {
+	//		pTex = GetAppInst()->GetTex(TEX_LG1);
+	//	}
+	//	else if (mode == MODE_REGISTER) {
+	//		pTex = GetAppInst()->GetTex(TEX_REGISTER);
+	//	}
+	//}
+	m_pSpr->End();
 	// 描画を開始（シーン描画の開始）.
 	m_pDev->BeginScene();
 	m_pSpr->Begin(D3DXSPRITE_ALPHABLEND);
-	D3DXMATRIX identity;
-	D3DXMatrixIdentity(&identity);
-	m_pSpr->SetTransform(&identity);
-	IDirect3DDevice9* m_pDev = GetAppInst()->GetDxDev();
-	ID3DXSprite* pSpr = GetAppInst()->GetDxSpr();
+	//D3DXMATRIX identity;
+	//D3DXMatrixIdentity(&identity);
+	//m_pSpr->SetTransform(&identity);
+	//IDirect3DDevice9* m_pDev = GetAppInst()->GetDxDev();
+	//ID3DXSprite* pSpr = GetAppInst()->GetDxSpr();
 	// 動画を取得してループ再生・カーソルが動いたら初期化
 
 	//シーンの描画を終了.
@@ -891,7 +946,7 @@ void MyApp::CheckPlayerItemHit()
 		switch (item)
 		{
 		case BOX_ITEM_MOVE:
-			tank->AddMoveSpeed(0.3f*50);
+			tank->AddMoveSpeed(0.3f);
 			break;
 
 		case BOX_ITEM_DISTANCE:

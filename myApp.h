@@ -126,7 +126,26 @@ private:
 	PlayerDDD m_pDDD; 
 	
 	void CheckPlayerItemHit();
-	
+	enum class GameMode {
+		Coop,   // 協力
+		Versus  // 対戦
+	};
+
+	enum class SelectState {
+		ModeSelect,        // 協力 or 対戦を選ぶ
+		PlayerJoin,        // 参加待機（人数受付）
+		//ReadyConfirm,    // 準備完了演出
+	};
+	const float JOIN_TIME_LIMIT = 4.0f; // Debug
+//	const float JOIN_TIME_LIMIT = 15.0f; // Debugなら3.0f
+	float joinTimer = 0.0f;
+	int joinedPlayers = 1;     // test
+	//	int joinedPlayers = 2; // 2Pは必須
+
+	// アニメーション 
+	float m_logoY;						   // logo y座標
+	float m_logoSpeed;					   // アニメーション速さ
+	float m_logotime;                      // タイマー
 #if defined(_DEBUG)
 	// デバッグ情報の表示.
 	void DrawDebugInfo();
